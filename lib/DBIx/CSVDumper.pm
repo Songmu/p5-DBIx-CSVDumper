@@ -61,11 +61,15 @@ sub encoding {
 
 sub dump {
     my ($self, %args) = @_;
-    my $sth    = $args{sth};
-    my $output = $args{output};
-    my $encoding = $self->encoding;
+    my $sth      = $args{sth};
+    my $file     = $args{file};
+    my $fh       = $args{fh};
+    my $encoding = $args{encoding} || $self->encoding;
 
-    open my $fh, '>', $output or die $!;
+    unless ($fh) {
+        open $fh, '>', $file or die $!;
+    }
+
     my $csv = $self->csv_obj;
     my $cols = $sth->{NAME};
     $csv->print($fh, $cols);
