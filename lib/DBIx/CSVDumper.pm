@@ -66,6 +66,8 @@ sub dump {
     my $fh       = $args{fh};
     my $encoding = $args{encoding} || $self->encoding;
 
+    $sth->execute if $DBI::VERSION >= 1.41 && !$sth->{Executed};
+
     unless ($fh) {
         open $fh, '>', $file or die $!;
     }
