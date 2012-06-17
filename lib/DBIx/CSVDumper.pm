@@ -5,26 +5,65 @@ use utf8;
 use Encode;
 our $VERSION = '0.01';
 
-sub new { bless {}, shift };
+our %DEFAULT_CSV_ARGS = (
+    binary          => 1,
+    always_quote    => 1,
+    eol             => "\r\n",
+);
 
-sub csv_obj {
-    my ($self, %opt) = @_;
-    if (!$self->{_csv_obj} || %opt) {
-        $self->{_csv_obj} = $self->csv_module->new({
-            binary          => 1,
-            always_quote    => 1,
-            eol             => "\r\n",
-            %opt,
-        });
-    }
-    $self->{_csv_obj};
+sub new {
+    my ($kls, %args) = @_;
+    my $self = bless {}, $kls;
+
+    my $csv_class   = $args{csv_class};
+    my $csv_args    = $args{csv_args};
+    my $encoding    = $args{encoding};
+
+    $self->csv_class($csv_class) if $csv_class;
+    $self->csv_obj($self->csv_class->new({
+        %DEFAULT_CSV_ARGS,
+        %$csv_args,
+    })) if $csv_args;
+
+    $self->encoding($encoding) if $encoding;
+
+    $self;
 }
 
-sub dump_csv {
+sub csv_class {
+    my ($self, $mod) = shift;
+    $self->{_csv_class} = $mod if $mod;
+    $self->{_csv_class} ||= sub {
+        for my $module (qw/Text::CSV_XS Text::CSV/) {
+            if (eval "use $module; 1") {
+                return $module;
+            }
+        }
+        die 'module Text::CSV(_XS)? is required.';
+    }->();
+}
+
+sub csv_obj {
+    my ($self, $obj) = @_;
+    $self->{_csv_obj} = $obj if $obj;
+    $self->{_csv_obj} ||= $self->csv_class->new({
+        %DEFAULT_CSV_ARGS,
+    });
+}
+
+sub encoding {
+    my ($self, $enc) = @_;
+    if ($enc) {
+        $self->{_encoding} = Encode::find_encoding($enc);
+    }
+    $self->{_encoding} ||= Encode::find_encoding('utf-8');
+}
+
+sub dump {
     my ($self, %args) = @_;
     my $sth    = $args{sth};
     my $output = $args{output};
-    my $encoding = Encode::find_encoding($args{encoding} || 'utf-8');
+    my $encoding = $self->encoding;
 
     open my $fh, '>', $output or die $!;
     my $csv = $self->csv_obj;
@@ -36,18 +75,6 @@ sub dump_csv {
     }
 }
 
-sub csv_module {
-    my ($self, $mod) = shift;
-    $self->{_csv_module} = $mod if $mod;
-    $self->{_csv_module} ||= sub {
-        for my $module (qw/Text::CSV_XS Text::CSV/) {
-            if (eval "use $module; 1") {
-                return $module;
-            }
-        }
-        die 'module Text::CSV(_XS)? is required.';
-    }->();
-}
 
 1;
 __END__
