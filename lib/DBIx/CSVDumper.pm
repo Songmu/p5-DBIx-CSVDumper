@@ -87,15 +87,120 @@ __END__
 
 =head1 NAME
 
-DBIx::CSVDumper -
+DBIx::CSVDumper - dumping database (DBI) data into a CSV.
 
 =head1 SYNOPSIS
 
   use DBIx::CSVDumper;
+  my $dbh = DBI->connect(...);
+  my $dumper = DBIx::CSVDumper->new(
+    csv_class => 'Text::CSV_XS',
+    csv_args  => {
+      binary          => 1,
+      always_quote    => 1,
+      eol             => "\r\n",
+    },
+    encoding    => 'utf-8',
+  );
+  
+  my $sth = $dbh->prepare('SELECT * FROM item');
+  $sth->execute;
+  $dumper->dump(
+    sth     => $sth,
+    file    => 'tmp/hoge.csv',
+  );
 
 =head1 DESCRIPTION
 
-DBIx::CSVDumper is
+DBIx::CSVDumper is a module for dumping database (DBI) data into a CSV.
+
+=head1 CONSTRUCTOR
+
+=over
+
+=item C<new>
+
+  my $dumper = DBIx::CSVDumper->new(%args);
+
+Create new dumper object. I<%args> is a hash with object parameters.
+Currently recognized keys are:
+
+=over
+
+=item I<csv_class>
+
+  csv_class => 'Text::CSV_XS',
+  (default: automaticaly used Text::CSV_XS or Text::CSV)
+
+=item I<csv_args>
+
+  csv_args => {
+    binary          => 1,
+    always_quote    => 1,
+    eol             => "\r\n",
+  },
+  (default: same as above)
+
+=item I<encoding>
+
+  encoding => 'cp932',
+  (default: utf-8)
+
+=back
+
+=back
+
+=head1 METHOD
+
+=over
+
+=item C<dump>
+
+  $dumper->dump(%args);
+
+Dump csv file. I<%args> is a hash with parameters. Currently recognized
+keys are:
+
+=over
+
+=item I<sth>
+
+  sth => $sth
+  (required)
+
+the value is a DBI::st object. C<execute> method should be called beforehand or
+automatically called with DBI 1.41 or newer and no bind params.
+
+
+=item I<file>
+
+  file => $file
+
+string of file name.
+
+=item I<fh>
+
+  fh => $fh
+
+file handle. args C<file> or C<fh> is required.
+
+=item I<enocoding>
+
+  enocding => 'euc-jp',
+  (default: $dumper->encoding)
+
+encoding.
+
+
+=back
+
+=item C<csv_class>
+
+=item C<csv_obj>
+
+=item C<encoding>
+
+=back
 
 =head1 AUTHOR
 
