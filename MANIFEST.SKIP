@@ -19,3 +19,6 @@
 ^\.shipit$
 ^\.git/
 \.sw[po]$
+^MYMETA\.
+\b\.gitignore
+README.pod
