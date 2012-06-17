@@ -1,4 +1,4 @@
-package DBIx::Dumper;
+package DBIx::CSVDumper;
 use strict;
 use warnings;
 use utf8;
@@ -10,7 +10,7 @@ sub new { bless {}, shift };
 sub csv_obj {
     my ($self, %opt) = @_;
     if (!$self->{_csv_obj} || %opt) {
-        $self->{_csv_obj} = _csv_module()->new({
+        $self->{_csv_obj} = $self->csv_module->new({
             binary          => 1,
             always_quote    => 1,
             eol             => "\r\n",
@@ -26,7 +26,7 @@ sub dump_csv {
     my $output = $args{output};
     my $encoding = Encode::find_encoding($args{encoding} || 'utf-8');
 
-    open my $fh, '>>', $output or die $!;
+    open my $fh, '>', $output or die $!;
     my $csv = $self->csv_obj;
     my $cols = $sth->{NAME};
     $csv->print($fh, $cols);
@@ -36,30 +36,33 @@ sub dump_csv {
     }
 }
 
-sub _csv_module {
-    for my $module (qw/Text::CSV_XS Text::CSV/) {
-        if (eval "use $module; 1") {
-            return $module;
+sub csv_module {
+    my ($self, $mod) = shift;
+    $self->{_csv_module} = $mod if $mod;
+    $self->{_csv_module} ||= sub {
+        for my $module (qw/Text::CSV_XS Text::CSV/) {
+            if (eval "use $module; 1") {
+                return $module;
+            }
         }
-    }
-    die 'module Text::CSV(_XS)? is required.';
+        die 'module Text::CSV(_XS)? is required.';
+    }->();
 }
-
 
 1;
 __END__
 
 =head1 NAME
 
-DBIx::Dumper -
+DBIx::CSVDumper -
 
 =head1 SYNOPSIS
 
-  use DBIx::Dumper;
+  use DBIx::CSVDumper;
 
 =head1 DESCRIPTION
 
-DBIx::Dumper is
+DBIx::CSVDumper is
 
 =head1 AUTHOR
 
