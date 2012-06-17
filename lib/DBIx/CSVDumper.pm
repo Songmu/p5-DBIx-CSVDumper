@@ -35,7 +35,7 @@ sub csv_class {
     $self->{_csv_class} = $mod if $mod;
     $self->{_csv_class} ||= sub {
         for my $module (qw/Text::CSV_XS Text::CSV/) {
-            if (eval "use $module; 1") {
+            if (eval "use $module; 1") { ## no critic
                 return $module;
             }
         }
@@ -184,7 +184,7 @@ string of file name.
 
 file handle. args C<file> or C<fh> is required.
 
-=item I<enocoding>
+=item I<encoding>
 
   enocding => 'euc-jp',
   (default: $dumper->encoding)

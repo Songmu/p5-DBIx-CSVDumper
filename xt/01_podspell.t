@@ -8,3 +8,9 @@ __DATA__
 Masayuki Matsuki
 y.songmu@gmail.com
 DBIx::CSVDumper
+CSV
+DBI
+csv
+sth
+fh
+params
