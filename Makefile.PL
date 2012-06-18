@@ -1,6 +1,6 @@
 use inc::Module::Install;
-name 'DBIx-Dumper';
-all_from 'lib/DBIx/Dumper.pm';
+name 'DBIx-CSVDumper';
+all_from 'lib/DBIx/CSVDumper.pm';
 
 # requires '';
 
