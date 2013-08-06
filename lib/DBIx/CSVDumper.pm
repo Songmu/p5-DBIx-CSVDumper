@@ -3,6 +3,8 @@ use strict;
 use warnings;
 use utf8;
 use Encode;
+use Text::CSV;
+
 our $VERSION = '0.01';
 
 our %DEFAULT_CSV_ARGS = (
@@ -15,12 +17,10 @@ sub new {
     my ($kls, %args) = @_;
     my $self = bless {}, $kls;
 
-    my $csv_class   = $args{csv_class};
     my $csv_args    = $args{csv_args};
     my $encoding    = $args{encoding};
 
-    $self->csv_class($csv_class) if $csv_class;
-    $self->csv_obj($self->csv_class->new({
+    $self->csv_obj(Text::CSV->new({
         %DEFAULT_CSV_ARGS,
         %$csv_args,
     })) if $csv_args;
@@ -30,23 +30,10 @@ sub new {
     $self;
 }
 
-sub csv_class {
-    my ($self, $mod) = shift;
-    $self->{_csv_class} = $mod if $mod;
-    $self->{_csv_class} ||= sub {
-        for my $module (qw/Text::CSV_XS Text::CSV/) {
-            if (eval "use $module; 1") { ## no critic
-                return $module;
-            }
-        }
-        die 'module Text::CSV(_XS)? is required.';
-    }->();
-}
-
 sub csv_obj {
     my ($self, $obj) = @_;
     $self->{_csv_obj} = $obj if $obj;
-    $self->{_csv_obj} ||= $self->csv_class->new({
+    $self->{_csv_obj} ||= Text::CSV->new({
         %DEFAULT_CSV_ARGS,
     });
 }
@@ -94,7 +81,6 @@ DBIx::CSVDumper - dumping database (DBI) data into a CSV.
   use DBIx::CSVDumper;
   my $dbh = DBI->connect(...);
   my $dumper = DBIx::CSVDumper->new(
-    csv_class => 'Text::CSV_XS',
     csv_args  => {
       binary          => 1,
       always_quote    => 1,
@@ -126,11 +112,6 @@ Create new dumper object. I<%args> is a hash with object parameters.
 Currently recognized keys are:
 
 =over
-
-=item I<csv_class>
-
-  csv_class => 'Text::CSV_XS',
-  (default: automaticaly used Text::CSV_XS or Text::CSV)
 
 =item I<csv_args>
 
@@ -193,8 +174,6 @@ encoding.
 
 
 =back
-
-=item C<csv_class>
 
 =item C<csv_obj>
 
