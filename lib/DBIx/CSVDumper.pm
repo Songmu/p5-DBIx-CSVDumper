@@ -108,12 +108,12 @@ DBIx::CSVDumper is a module for dumping database (DBI) data into a CSV.
 
   my $dumper = DBIx::CSVDumper->new(%args);
 
-Create new dumper object. I<%args> is a hash with object parameters.
+Create new dumper object. C<%args> is a hash with object parameters.
 Currently recognized keys are:
 
 =over
 
-=item I<csv_args>
+=item C<csv_args>
 
   csv_args => {
     binary          => 1,
@@ -122,7 +122,7 @@ Currently recognized keys are:
   },
   (default: same as above)
 
-=item I<encoding>
+=item C<encoding>
 
   encoding => 'cp932',
   (default: utf-8)
@@ -139,33 +139,32 @@ Currently recognized keys are:
 
   $dumper->dump(%args);
 
-Dump csv file. I<%args> is a hash with parameters. Currently recognized
+Dump CSV file. C<%args> is a hash with parameters. Currently recognized
 keys are:
 
 =over
 
-=item I<sth>
+=item C<sth>
 
   sth => $sth
   (required)
 
-the value is a DBI::st object. C<execute> method should be called beforehand or
-automatically called with DBI 1.41 or newer and no bind params.
+the value is a C<DBI::st> object. C<execute> method should be called beforehand or
+automatically called with DBI 1.41 or newer and no bind parameters.
 
-
-=item I<file>
+=item C<file>
 
   file => $file
 
 string of file name.
 
-=item I<fh>
+=item C<fh>
 
   fh => $fh
 
 file handle. args C<file> or C<fh> is required.
 
-=item I<encoding>
+=item C<encoding>
 
   enocding => 'euc-jp',
   (default: $dumper->encoding)
