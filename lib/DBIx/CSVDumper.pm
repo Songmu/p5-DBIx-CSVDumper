@@ -17,25 +17,22 @@ sub new {
     my ($kls, %args) = @_;
     my $self = bless {}, $kls;
 
-    my $csv_args    = $args{csv_args};
+    my $csv_args    = $args{csv_args} || {};
     my $encoding    = $args{encoding};
 
     $self->csv_obj(Text::CSV->new({
         %DEFAULT_CSV_ARGS,
         %$csv_args,
-    })) if $csv_args;
+    }));
 
     $self->encoding($encoding) if $encoding;
-
     $self;
 }
 
 sub csv_obj {
     my ($self, $obj) = @_;
     $self->{_csv_obj} = $obj if $obj;
-    $self->{_csv_obj} ||= Text::CSV->new({
-        %DEFAULT_CSV_ARGS,
-    });
+    $self->{_csv_obj};
 }
 
 sub encoding {
