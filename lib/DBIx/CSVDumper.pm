@@ -14,33 +14,24 @@ our %DEFAULT_CSV_ARGS = (
 );
 
 sub new {
-    my ($kls, %args) = @_;
-    my $self = bless {}, $kls;
-
-    my $csv_args    = $args{csv_args} || {};
-    my $encoding    = $args{encoding};
-
-    $self->csv_obj(Text::CSV->new({
-        %DEFAULT_CSV_ARGS,
-        %$csv_args,
-    }));
-
-    $self->encoding($encoding) if $encoding;
-    $self;
+    my $class = shift;
+    my %args = @_ == 1 ? %{$_[0]} : @_;
+    bless {%args}, $class;
 }
 
 sub csv_obj {
     my ($self, $obj) = @_;
     $self->{_csv_obj} = $obj if $obj;
-    $self->{_csv_obj};
+    $self->{_csv_obj} ||= Text::CSV->new({
+        %DEFAULT_CSV_ARGS,
+        %{ $self->{csv_args} || {} },
+    });
 }
 
 sub encoding {
     my ($self, $enc) = @_;
-    if ($enc) {
-        $self->{_encoding} = Encode::find_encoding($enc);
-    }
-    $self->{_encoding} ||= Encode::find_encoding('utf-8');
+    $self->{_encoding} = Encode::find_encoding($enc) if $enc;
+    $self->{_encoding} ||= Encode::find_encoding($self->{encoding} || 'utf-8');
 }
 
 sub dump {
@@ -64,7 +55,6 @@ sub dump {
         $csv->print($fh, [@data]);
     }
 }
-
 
 1;
 __END__
@@ -108,8 +98,6 @@ DBIx::CSVDumper is a module for dumping database (DBI) data into a CSV.
 Create new dumper object. C<%args> is a hash with object parameters.
 Currently recognized keys are:
 
-=over
-
 =item C<csv_args>
 
   csv_args => {
@@ -123,8 +111,6 @@ Currently recognized keys are:
 
   encoding => 'cp932',
   (default: utf-8)
-
-=back
 
 =back
 
@@ -167,9 +153,6 @@ file handle. args C<file> or C<fh> is required.
   (default: $dumper->encoding)
 
 encoding.
-
-
-=back
 
 =item C<csv_obj>
 
