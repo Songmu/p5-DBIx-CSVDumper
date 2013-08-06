@@ -125,8 +125,6 @@ Currently recognized keys are:
 Dump CSV file. C<%args> is a hash with parameters. Currently recognized
 keys are:
 
-=over
-
 =item C<sth>
 
   sth => $sth

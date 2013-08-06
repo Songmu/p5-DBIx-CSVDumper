@@ -36,18 +36,18 @@ DBIx::CSVDumper is a module for dumping database (DBI) data into a CSV.
     Create new dumper object. `%args` is a hash with object parameters.
     Currently recognized keys are:
 
-    - `csv_args`
+- `csv_args`
 
-            csv_args => {
-              binary          => 1,
-              always_quote    => 1,
-              eol             => "\r\n",
-            },
-            (default: same as above)
-    - `encoding`
+        csv_args => {
+          binary          => 1,
+          always_quote    => 1,
+          eol             => "\r\n",
+        },
+        (default: same as above)
+- `encoding`
 
-            encoding => 'cp932',
-            (default: utf-8)
+        encoding => 'cp932',
+        (default: utf-8)
 
 # METHOD
 
@@ -58,34 +58,32 @@ DBIx::CSVDumper is a module for dumping database (DBI) data into a CSV.
     Dump CSV file. `%args` is a hash with parameters. Currently recognized
     keys are:
 
-    - `sth`
+- `sth`
 
-            sth => $sth
-            (required)
+        sth => $sth
+        (required)
 
-        the value is a `DBI::st` object. `execute` method should be called beforehand or
-        automatically called with DBI 1.41 or newer and no bind parameters.
+    the value is a `DBI::st` object. `execute` method should be called beforehand or
+    automatically called with DBI 1.41 or newer and no bind parameters.
 
-    - `file`
+- `file`
 
-            file => $file
+        file => $file
 
-        string of file name.
+    string of file name.
 
-    - `fh`
+- `fh`
 
-            fh => $fh
+        fh => $fh
 
-        file handle. args `file` or `fh` is required.
+    file handle. args `file` or `fh` is required.
 
-    - `encoding`
+- `encoding`
 
-            enocding => 'euc-jp',
-            (default: $dumper->encoding)
+        enocding => 'euc-jp',
+        (default: $dumper->encoding)
 
-        encoding.
-
-
+    encoding.
 
 - `csv_obj`
 - `encoding`
