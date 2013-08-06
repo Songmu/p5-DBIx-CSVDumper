@@ -10,3 +10,10 @@ nytprof.out
 MANIFEST.bak
 *.sw[po]
 tmp/
+/DBIx-CSVDumper-*
+/.build
+/_build_params
+/Build
+!Build/
+!META.json
+!LICENSE

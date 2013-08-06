@@ -1,4 +1,6 @@
 Revision history for Perl extension DBIx::Dumper
 
+{{$NEXT}}
+
 0.01    Thu Jun  7 21:30:58 2012
         - original version
