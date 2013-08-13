@@ -50,8 +50,8 @@
       },
       "test" : {
          "requires" : {
-            "DBI" : "0",
-            "Test::More" : "0.98"
+            "Test::More" : "0.98",
+            "Test::Requires" : "0"
          }
       }
    },
@@ -67,5 +67,5 @@
          "web" : "https://github.com/Songmu/p5-DBIx-CSVDumper"
       }
    },
-   "version" : "0.01"
+   "version" : "0.02"
 }

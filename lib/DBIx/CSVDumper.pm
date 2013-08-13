@@ -5,7 +5,7 @@ use utf8;
 use Encode;
 use Text::CSV;
 
-our $VERSION = '0.01';
+our $VERSION = '0.02';
 
 our %DEFAULT_CSV_ARGS = (
     binary          => 1,

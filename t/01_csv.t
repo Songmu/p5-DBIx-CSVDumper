@@ -5,7 +5,7 @@ use Test::More;
 
 use File::Temp qw/tempdir tempfile/;
 use DBIx::CSVDumper;
-use DBI;
+use Test::Requires qw/DBD::SQLite DBI/;
 
 my $dir = tempdir(CLEANUP => 1);
 my (undef, $db) = tempfile(DIR => $dir, SUFFIX => '.db');

@@ -9,7 +9,7 @@ on configure => sub {
 };
 
 on test => sub {
-    requires 'DBI';
+    requires 'Test::Requires';
     requires 'Test::More', '0.98';
 };
 
